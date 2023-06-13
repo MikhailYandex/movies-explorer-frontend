@@ -8,14 +8,14 @@ const SearchForm = () => {
   return (
 		<>
 			<div className="searchform">
-				<div className="searchform__form">
+				<form className="searchform__form">
 					<input
 						className="searchform__input"
 						type="text"
 						placeholder="Фильм"
 					/>
 					<button className="searchform__search links">Найти</button>
-				</div>
+				</form>
 				<div className="searchform__filter">
           <button
             className={`searchform__filter-button links ${

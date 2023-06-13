@@ -31,7 +31,7 @@
 		width: 520px;
 		background-color: #202020;
 		height: 100%;
-		overflow: scroll;
+		overflow-y: scroll;
 	}
 }
 

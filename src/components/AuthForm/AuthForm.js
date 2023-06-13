@@ -20,6 +20,7 @@ const AuthForm = ({ title, buttonText, quiestion, toLink, link, registr }) => {
               className="auth__input auth__input_name"
               type="text"
               name="name"
+							placeholder="Имя"
               required
             />
           </>
@@ -31,6 +32,7 @@ const AuthForm = ({ title, buttonText, quiestion, toLink, link, registr }) => {
           name="email"
           value={values.email || ""}
 					onChange={handleChange}
+					placeholder="Email"
           required
         />
         <span
@@ -48,6 +50,7 @@ const AuthForm = ({ title, buttonText, quiestion, toLink, link, registr }) => {
 					minLength="6"
           value={values.password || ""}
 					onChange={handleChange}
+					placeholder="Пароль"
           required
         />
         <span
