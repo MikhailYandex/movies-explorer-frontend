@@ -1,0 +1,21 @@
+body {
+  font-family: "Inter", Arial, sans-serif;
+  background-color: #202020;
+  color: #fff;
+}
+
+#root {
+  min-width: 320px;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.links {
+  cursor: pointer;
+  transition: all .5s ease;
+}
+
+.links:hover {
+  opacity: .7;
+}
