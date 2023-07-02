@@ -1,47 +1,66 @@
-import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 import "./MoviesCard.css";
-import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
-const MoviesCard = ({ card }) => {
+const MoviesCard = ({ card, savedMovies, savedMovieList, deleteMovieToList }) => {
   const { pathname } = useLocation();
 
-  //временно, чтоб посмотреть)
-  const [isLiked, setIsLiked] = useState(false);
+  const convertTime = (length) => {
+    if (length >= 60) {
+      return `${Math.floor(length / 60)}ч ${length % 60}м`;
+    }
+    return `${length}м`;
+  };
 
-  function handleLikeClick() {
-    setIsLiked(true);
+  const isLiked = useMemo(() => {
+    return savedMovies.some((m) => m.movieId === card.id);
+  }, [card, savedMovies]);
+
+  function handleLikeMovie() {
+    !isLiked ? savedMovieList(card) : deleteMovieToList(card);
   }
 
-  // временно
-  function handleDeleteClick() {
-    setIsLiked(false);
+  const cardLikeButtonClassName = `card__button ${
+    isLiked ? "card__button_like" : "card__button_unlike"
+  }`;
+
+  function handleDeleteMovie() {
+    return deleteMovieToList(card);
   }
 
   return (
-		<li className="card">
-			<div className="card__box">
-				<div>
-					<h2 className="card__title">{card.title}</h2>
-					<p className="card__duration">{card.duration}</p>
-				</div>
-				{pathname === "/movies" && (
-					<button
-						className={`card__button links card__button_${
-							isLiked ? "like" : "unlike"
-						}`}
-						type="button"
-						onClick={isLiked ? handleDeleteClick : handleLikeClick}
-					/>
-				)}
-				{pathname === "/saved-movies" && (
-					<button
-						className="card__button links card__button_delete"
-						type="button"
-					/>
-				)}
-			</div>
-			<img className="card__image" alt={card.title} src={card.image} />
-		</li>
+    <li className="card">
+      <div className="card__box">
+        <div>
+          <h2 className="card__title">{card.nameRU || card.nameEN}</h2>
+          <p className="card__duration">{convertTime(card.duration)}</p>
+        </div>
+        {pathname === "/movies" ? (
+          <button
+            className={cardLikeButtonClassName}
+            type="button"
+            onClick={handleLikeMovie}
+          />
+        ) : (
+          <button
+            className="card__button card__button_delete"
+            type="button"
+            onClick={handleDeleteMovie}
+          />
+        )}
+      </div>
+      <a href={card.trailerLink} target="_blank" rel="noreferrer noopener">
+        <img
+          className="card__image"
+          alt={card.nameRU || card.nameEN}
+          src={
+            card.image.url
+              ? `${"https://api.nomoreparties.co/"}${card.image.url}`
+              : card.image
+          }
+        />
+      </a>
+    </li>
   );
 };
 

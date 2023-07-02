@@ -64,7 +64,6 @@
 .navigation__account {
 	width: 100px;
 	min-height: 32px;
-	background-color: #313131;
 	border-radius: 20px;
 	display: flex;
 	justify-content: center;
@@ -72,9 +71,18 @@
 	font-size: 14px;
 	line-height: 16px;
 	font-weight: 500;
-	color: #fff;
 	text-decoration: none;
 	margin-left: 50px;
+}
+
+.navigation__account_black {
+	background-color: #313131;
+	color: #fff;
+}
+
+.navigation__account_green {
+	background-color: #3DDC84;
+	color: #272727;
 }
 
 .burger {

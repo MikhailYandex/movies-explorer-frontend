@@ -1,6 +1,6 @@
 import AuthForm from "../AuthForm/AuthForm";
 
-const Login = () => {
+const Login = ({ handleSignIn }) => {
   return (
     <AuthForm
       title="Рады видеть!"
@@ -9,6 +9,7 @@ const Login = () => {
       link="Регистрация"
       toLink="/signup"
       registr={false}
+      onSubmit={handleSignIn}
     />
   );
 };
