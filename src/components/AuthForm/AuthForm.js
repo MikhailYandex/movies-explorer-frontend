@@ -76,6 +76,7 @@ const AuthForm = ({
           onChange={handleChange}
           placeholder="Email"
           required
+					pattern="^\S+@\S+\.\S+$"
         />
         <span
           className={`auth__input-error ${
