@@ -14,6 +14,9 @@ import * as moviesApi from "../../utils/MoviesApi";
 import { CurrentUserContext } from "../../contexts/CurretnUserContext";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { useEffect, useState } from "react";
+import InfoTooltip from "../InfoToolTip/InfoToolTip";
+import successImage from "../../images/success.svg";
+import failedImage from "../../images/error.svg";
 
 function App() {
   const navigate = useNavigate();
@@ -22,6 +25,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [allMovies, setAllMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
+  const [infoTitle, setInfoTitle] = useState("Success");
+  const [infoImage, setInfoImage] = useState(successImage);
+
+  function closeAllPopups() {
+    setIsInfoPopupOpen(false);
+  }
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -90,6 +100,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        setInfoTitle("Фильм не сохранился! Попробуйте ещё раз");
+        setInfoImage(failedImage);
+        setIsInfoPopupOpen(true);
       });
   }
 
@@ -104,25 +117,39 @@ function App() {
           state.filter((item) => item._id !== removedMovie._id)
         );
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setInfoTitle("Фильм не удалён! Попробуйте ещё раз");
+        setInfoImage(failedImage);
+        setIsInfoPopupOpen(true);
+      });
   }
 
   function handleSignUp(data) {
+    setIsLoading(true);
     mainApi
       .signUp(data)
-      .then(() => {
-        mainApi.signIn(data).then(() => {
-          setLoggedIn(true);
-          navigate("/movies", { replace: true });
-        });
+      .then((res) => {
+        if (res) {
+          setInfoTitle("Вы успешно зарегистрировались!");
+          setInfoImage(successImage);
+          handleSignIn(data);
+        }
       })
       .catch((err) => {
         console.log(err);
         setLoggedIn(false);
+        setInfoTitle("Не получилось зарегистрироваться! Попробуйте ещё раз.");
+        setInfoImage(failedImage);
+      })
+      .finally(() => {
+        setIsInfoPopupOpen(true);
+        setIsLoading(false);
       });
   }
 
   function handleSignIn(data) {
+    setIsLoading(true);
     mainApi
       .signIn(data)
       .then((data) => {
@@ -134,21 +161,32 @@ function App() {
       .catch((err) => {
         console.log(err);
         setLoggedIn(false);
+        setInfoTitle("Не получилось войти! Попробуйте ещё раз");
+        setInfoImage(failedImage);
+        setIsInfoPopupOpen(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
   function handleUserUpdate(userData) {
-		setIsLoading(true);
+    setIsLoading(true);
     mainApi
       .updateUserInfo(userData)
       .then((data) => {
         setCurrentUser(data);
+        setInfoTitle("Данные успешно обновлены!");
+        setInfoImage(successImage);
       })
       .catch((err) => {
         console.log(err);
+        setInfoTitle("Ошибка при обновлении данных! Попробуйте ещё раз.");
+        setInfoImage(failedImage);
       })
-			.finally(() => {
+      .finally(() => {
         setIsLoading(false);
+        setIsInfoPopupOpen(true);
       });
   }
 
@@ -156,6 +194,7 @@ function App() {
     localStorage.clear();
     setCurrentUser({});
     setLoggedIn(false);
+    navigate("/", { replace: true });
   }
 
   return (
@@ -200,25 +239,39 @@ function App() {
                   loggedIn={loggedIn}
                   signOut={signOut}
                   handleUserUpdate={handleUserUpdate}
-									isLoading={isLoading}
+                  isLoading={isLoading}
                 />
               }
             />
             <Route
               path="/signup"
               element={
-                <Register loggedIn={loggedIn} handleSignUp={handleSignUp} />
+                <Register
+                  loggedIn={loggedIn}
+                  handleSignUp={handleSignUp}
+                  isLoading={isLoading}
+                />
               }
             />
             <Route
               path="/signin"
               element={
-                <Login loggedIn={loggedIn} handleSignIn={handleSignIn} />
+                <Login
+                  loggedIn={loggedIn}
+                  handleSignIn={handleSignIn}
+                  isLoading={isLoading}
+                />
               }
             />
             <Route path="*" element={<Error />} />
           </Routes>
         </main>
+        <InfoTooltip
+          isOpen={isInfoPopupOpen}
+          onClose={closeAllPopups}
+          infoTitle={infoTitle}
+          infoImage={infoImage}
+        />
         <Footer />
       </div>
     </CurrentUserContext.Provider>

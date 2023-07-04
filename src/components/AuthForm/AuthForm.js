@@ -14,6 +14,7 @@ const AuthForm = ({
   registr,
   loggedIn,
   onSubmit,
+  isLoading,
 }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -47,7 +48,9 @@ const AuthForm = ({
           <>
             <label className="auth__label">Имя</label>
             <input
-              className="auth__input"
+              className={`auth__input ${
+                isLoading ? "auth__input_disabled" : ""
+              }`}
               type="text"
               name="name"
               value={values.name || ""}
@@ -69,14 +72,14 @@ const AuthForm = ({
         )}
         <label className="auth__label">E-mail</label>
         <input
-          className="auth__input"
+          className={`auth__input ${isLoading ? "auth__input_disabled" : ""}`}
           type="email"
           name="email"
           value={values.email || ""}
           onChange={handleChange}
           placeholder="Email"
           required
-					pattern="^\S+@\S+\.\S+$"
+          pattern="^\S+@\S+\.\S+$"
         />
         <span
           className={`auth__input-error ${
@@ -87,7 +90,7 @@ const AuthForm = ({
         </span>
         <label className="auth__label">Пароль</label>
         <input
-          className="auth__input"
+          className={`auth__input ${isLoading ? "auth__input_disabled" : ""}`}
           type="password"
           name="password"
           minLength="6"
