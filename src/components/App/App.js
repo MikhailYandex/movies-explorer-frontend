@@ -138,6 +138,7 @@ function App() {
   }
 
   function handleUserUpdate(userData) {
+		setIsLoading(true);
     mainApi
       .updateUserInfo(userData)
       .then((data) => {
@@ -145,6 +146,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+			.finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -196,6 +200,7 @@ function App() {
                   loggedIn={loggedIn}
                   signOut={signOut}
                   handleUserUpdate={handleUserUpdate}
+									isLoading={isLoading}
                 />
               }
             />

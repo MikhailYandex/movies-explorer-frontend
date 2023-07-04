@@ -1,25 +1,81 @@
 import "./Profile.css";
 import { CurrentUserContext } from "../../contexts/CurretnUserContext";
 import useFormWithValidation from "../../hooks/useFormWithValidation";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
-const Profile = ({ signOut, handleUserUpdate }) => {
+const Profile = ({
+  signOut,
+  handleUserUpdate,
+  isLoading,
+}) => {
   const currentUser = useContext(CurrentUserContext);
+
+  const [name, setName] = useState(currentUser.name);
+  const [email, setEmail] = useState(currentUser.email);
+	const [isDisabled, setIsDisabled] = useState(true);
+  const [isSimilarValues, setIsSimilarValues] = useState(true);
 
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleUserUpdate(values);
-    resetForm(currentUser);
+
+    if (!isSimilarValues) {
+      handleUserUpdate({
+        name: name,
+        email: email,
+      });
+      resetForm();
+    }
+    setIsDisabled(true);
   };
+
+  useEffect(() => {
+    let name = true;
+    let email = true;
+    if (values.name) {
+      name = values.name === currentUser.name;
+    }
+    if (values.email) {
+      email = values.email === currentUser.email;
+    }
+    setIsSimilarValues(name && email);
+  }, [values.name, values.email]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setName(currentUser.name);
+      setEmail(currentUser.email);
+    }
+  }, [currentUser, isLoading]);
+
+  useEffect(() => {
+    if (values.name) {
+      setName(values.name);
+    }
+    if (values.email) {
+      setEmail(values.email);
+    }
+  }, [values.name, values.email]);
 
   useEffect(() => {
     if (currentUser) {
       resetForm();
     }
   }, [currentUser, resetForm]);
+
+  const handleEditButton = () => {
+    setIsDisabled(!isDisabled);
+  };
+
+  const profileSubmitButtonClassName = `profile__submit-button links ${
+    isDisabled ? "profile__submit-button_disabled" : ""
+  } ${
+    !isValid || isLoading || isSimilarValues
+      ? "profile__submit-button_inactive"
+      : ""
+  }`;
 
   return (
     <section className="profile">
@@ -28,10 +84,12 @@ const Profile = ({ signOut, handleUserUpdate }) => {
         <div className="profile__block">
           <p className="profile__label">Имя</p>
           <input
-            className="profile__input"
+            className={`profile__input ${
+              isDisabled || isLoading ? "profile__input_disabled" : ""
+            }`}
             type="text"
             name="name"
-            value={values.name || currentUser.name || ""}
+            value={`${values.name ? values.name : name}`}
             onChange={handleChange}
             placeholder="Имя"
             required
@@ -51,17 +109,20 @@ const Profile = ({ signOut, handleUserUpdate }) => {
         <div className="profile__block">
           <p className="profile__label">E-mail</p>
           <input
-            className="profile__input"
+            className={`profile__input ${
+              isDisabled || isLoading ? "profile__input_disabled" : ""
+            }`}
             type="email"
             name="email"
-            value={values.email || currentUser.email || ""}
+            value={`${values.email ? values.email : email}`}
             onChange={handleChange}
             placeholder="Email"
             required
+            pattern="^\S+@\S+\.\S+$"
           />
         </div>
         <span
-          className={`auth__input-error ${
+          className={`auth__input-error auth__input-error_email ${
             errors.email && "auth__input-error_active"
           }`}
         >
@@ -69,16 +130,21 @@ const Profile = ({ signOut, handleUserUpdate }) => {
         </span>
         <>
           <button
+            className={profileSubmitButtonClassName}
             type="submit"
-            disabled={!isValid}
-            className={`profile__button profile__button_edit links ${
-              !isValid ? "profile__button_disabled" : ""
-            }`}
+            disabled={!isValid || isLoading || isSimilarValues ? true : false}
           >
-            Редактировать
+            Сохранить
           </button>
           <button
-            type="submit"
+            type="button"
+            onClick={handleEditButton}
+            className="profile__button profile__button_edit links"
+          >
+            {isDisabled ? "Редактировать" : "Отменить"}
+          </button>
+          <button
+            type="button"
             onClick={signOut}
             className="profile__button profile__button_signout links"
           >
