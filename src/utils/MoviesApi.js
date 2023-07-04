@@ -1,4 +1,4 @@
-const MOVIES__URL = "https://api.nomoreparties.co/beatfilm-movies";
+import { MOVIES__URL } from '../utils/constants';
 
 export const getMovies = () => {
   return fetch(`${MOVIES__URL}`, {

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import "./MoviesCard.css";
 import { useLocation } from "react-router-dom";
+import { API__URL } from '../../../utils/constants';
 
 const MoviesCard = ({ card, savedMovies, savedMovieList, deleteMovieToList }) => {
   const { pathname } = useLocation();
@@ -55,7 +56,7 @@ const MoviesCard = ({ card, savedMovies, savedMovieList, deleteMovieToList }) =>
           alt={card.nameRU || card.nameEN}
           src={
             card.image.url
-              ? `${"https://api.nomoreparties.co/"}${card.image.url}`
+              ? `${API__URL}${card.image.url}`
               : card.image
           }
         />

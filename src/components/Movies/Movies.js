@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MoviesCardList from "./MoviesCardList/MoviesCardList";
 import SearchForm from "./SearchForm/SearchForm";
+import { SHORT_MOVIES_DURATION } from "../../utils/constants";
 
 const Movies = ({ isLoading, savedMovieList, deleteMovieToList, savedMovies, allMovies }) => {
   const [isChecked, setIsChecked] = useState(
@@ -25,7 +26,7 @@ const Movies = ({ isLoading, savedMovieList, deleteMovieToList, savedMovies, all
 
       return isChecked
         ? filtredMovieInclude
-        : movie.duration < 40 && filtredMovieInclude;
+        : movie.duration < SHORT_MOVIES_DURATION && filtredMovieInclude;
     });
 
     setFiltredMovies(movies);

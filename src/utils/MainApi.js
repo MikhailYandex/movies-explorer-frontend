@@ -1,5 +1,4 @@
-const BASE__URL = "https://api.mikhail.yandex.nomoredomains.rocks";
-const API__URL = "https://api.nomoreparties.co/";
+import { BASE__URL, API__URL } from '../utils/constants';
 
 const getResponse = (res) => {
   if (res.ok) {

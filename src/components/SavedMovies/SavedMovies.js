@@ -1,6 +1,7 @@
 import MoviesCardList from "../Movies/MoviesCardList/MoviesCardList";
 import SearchForm from "../Movies/SearchForm/SearchForm";
 import { useCallback, useMemo, useState } from "react";
+import { SHORT_MOVIES_DURATION } from "../../utils/constants";
 
 const SavedMovies = ({
   isLoading,
@@ -25,7 +26,7 @@ const SavedMovies = ({
         movie.nameEN.toLowerCase().includes(filterString.toLowerCase());
       return isChecked
         ? filtredMovieInclude
-        : movie.duration < 40 && filtredMovieInclude;
+        : movie.duration < SHORT_MOVIES_DURATION && filtredMovieInclude;
     });
   }, [filterString, isChecked, savedMovies]);
 

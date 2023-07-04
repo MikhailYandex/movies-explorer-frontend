@@ -3,6 +3,15 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import Preloader from "../../Preloader/Preloader";
+import {
+  MIN_BIG_SCREEN_SIZE,
+  MIN_SMALL_SCREEN_SIZE,
+  CARDS_QUANTITY_DESKTOP,
+  CARDS_QUANTITY_TABLET,
+  CARDS_QUANTITY_MOBILE,
+  CARDS_MORE_DESKTOP,
+  CARDS_MORE_MOBILE,
+} from "../../../utils/constants";
 
 const MoviesCardList = ({
   movies,
@@ -32,15 +41,22 @@ const MoviesCardList = ({
   }, [cards, paginate]);
 
   function changePaginate() {
-    if (window.innerWidth >= 1191) return setPaginate(12);
-    else if (window.innerWidth < 1191 && window.innerWidth <= 751)
-      return setPaginate(8);
-    else if (window.innerWidth < 751) return setPaginate(5);
+    if (window.innerWidth >= MIN_BIG_SCREEN_SIZE)
+      return setPaginate(CARDS_QUANTITY_DESKTOP);
+    else if (
+      window.innerWidth < MIN_BIG_SCREEN_SIZE &&
+      window.innerWidth <= MIN_SMALL_SCREEN_SIZE
+    )
+      return setPaginate(CARDS_QUANTITY_TABLET);
+    else if (window.innerWidth < MIN_SMALL_SCREEN_SIZE)
+      return setPaginate(CARDS_QUANTITY_MOBILE);
   }
 
   function handlePaginate() {
-    if (window.innerWidth >= 1191) return setPaginate(paginate + 3);
-    else if (window.innerWidth < 1191) return setPaginate(paginate + 2);
+    if (window.innerWidth >= MIN_BIG_SCREEN_SIZE)
+      return setPaginate(paginate + CARDS_MORE_DESKTOP);
+    else if (window.innerWidth < MIN_BIG_SCREEN_SIZE)
+      return setPaginate(paginate + CARDS_MORE_MOBILE);
   }
 
   return (
