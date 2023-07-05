@@ -34,6 +34,7 @@
 	width: 364px;
 	height: 203px;
 	object-fit: cover;
+	cursor: pointer;
 }
 
 .card__button {

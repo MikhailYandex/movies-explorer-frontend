@@ -19,3 +19,6 @@ body {
 .links:hover {
   opacity: .7;
 }
+.not-found {
+	text-align: center;
+}

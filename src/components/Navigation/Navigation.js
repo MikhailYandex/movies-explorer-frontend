@@ -1,9 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import "./Navigation.css";
 
-const Navigation = () => {
+const Navigation = ({ loggedIn }) => {
   const [isBurgerActive, setIsBurgerActive] = useState(false);
+  const { pathname } = useLocation();
 
   window.onresize = () => {
     setIsBurgerActive(false);
@@ -11,42 +12,62 @@ const Navigation = () => {
 
   return (
     <>
-      <nav
-        className={`navigation ${isBurgerActive ? "navigation_active" : ""}`}
-      >
-        <div
-          className={`navigation__container ${
-            isBurgerActive ? "navigation__container_active" : ""
-          }`}
-        >
-          <NavLink to="/" className="navigation__main links">
-            Главная
-          </NavLink>
-          <NavLink to="/movies" className="navigation__movies links">
-            Фильмы
-          </NavLink>
-          <NavLink
-            to="/saved-movies"
-            className="navigation__saved-movies links"
-          >
-            Сохранённые фильмы
-          </NavLink>
-          <NavLink to="/profile" className="navigation__account links">
-            Аккаунт
-          </NavLink>
+      {!loggedIn ? (
+        <div>
+          <Link to="/signup" className="header__signup links">
+            Регистрация
+          </Link>
+          <Link to="/signin" className="header__signin links">
+            Войти
+          </Link>
         </div>
-      </nav>
-      <button
-        className="burger"
-        type="button"
-        onClick={() => setIsBurgerActive(!isBurgerActive)}
-      >
-        <span
-          className={`burger__line ${
-            isBurgerActive ? "burger__line_active" : ""
-          }`}
-        />
-      </button>
+      ) : (
+        <>
+          <nav
+            className={`navigation ${
+              isBurgerActive ? "navigation_active" : ""
+            }`}
+          >
+            <div
+              className={`navigation__container ${
+                isBurgerActive ? "navigation__container_active" : ""
+              }`}
+            >
+              <NavLink to="/" className="navigation__main links">
+                Главная
+              </NavLink>
+              <NavLink to="/movies" className="navigation__movies links">
+                Фильмы
+              </NavLink>
+              <NavLink
+                to="/saved-movies"
+                className="navigation__saved-movies links"
+              >
+                Сохранённые фильмы
+              </NavLink>
+              <NavLink
+                to="/profile"
+                className={`navigation__account links navigation__account_${
+                  pathname === "/" ? "green" : "black"
+                }`}
+              >
+                Аккаунт
+              </NavLink>
+            </div>
+          </nav>
+          <button
+            className="burger"
+            type="button"
+            onClick={() => setIsBurgerActive(!isBurgerActive)}
+          >
+            <span
+              className={`burger__line ${
+                isBurgerActive ? "burger__line_active" : ""
+              }`}
+            />
+          </button>
+        </>
+      )}
     </>
   );
 };

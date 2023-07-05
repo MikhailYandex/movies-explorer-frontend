@@ -42,6 +42,11 @@
 	color: #fff;
 }
 
+.auth__input_disabled {
+	cursor: default;
+	pointer-events: none;
+}
+
 .auth__input:focus {
 	border: 1px solid #8B8B8B;
 }
