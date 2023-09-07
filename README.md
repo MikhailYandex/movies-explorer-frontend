@@ -50,8 +50,8 @@
 ---
 ## *Используемые технологии:*
 
-* React
-* JS
+* React.js
+* JavaScript
 * HTML 5
 * CSS 3
 ---
